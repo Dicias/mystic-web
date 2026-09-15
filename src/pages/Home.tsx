@@ -1,4 +1,3 @@
-import { lazy, Suspense } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
@@ -7,19 +6,12 @@ import { ServiceCard } from '../components/ServiceCard'
 import { StatCounter } from '../components/StatCounter'
 import { TestimonialCarousel } from '../components/TestimonialCarousel'
 import { WhatsAppCTA } from '../components/WhatsAppButton'
-import { PcAssembly } from '../components/PcAssembly'
 import { CircuitBackground } from '../components/CircuitBackground'
-import { useShouldRender3D } from '../components/pc3d/useShouldRender3D'
 import { SERVICES } from '../data/services'
 import { BUSINESS } from '../data/business'
 
-const PcAssembly3D = lazy(() =>
-  import('../components/pc3d/PcAssembly3D').then((m) => ({ default: m.PcAssembly3D })),
-)
-
 export function Home() {
   const navigate = useNavigate()
-  const shouldRender3D = useShouldRender3D()
 
   return (
     <div>
@@ -70,14 +62,6 @@ export function Home() {
           </motion.div>
         </div>
       </section>
-
-      {shouldRender3D ? (
-        <Suspense fallback={<PcAssembly />}>
-          <PcAssembly3D />
-        </Suspense>
-      ) : (
-        <PcAssembly />
-      )}
 
       <section className="relative overflow-hidden bg-white">
         <CircuitBackground tone="light" className="opacity-50" />

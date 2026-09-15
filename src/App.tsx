@@ -1,8 +1,10 @@
+import { useEffect, useState } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion'
 import { Navbar } from './components/Navbar'
 import { Footer } from './components/Footer'
 import { FloatingWhatsAppButton } from './components/WhatsAppButton'
+import { LoadingScreen } from './components/LoadingScreen'
 import { Home } from './pages/Home'
 import { Servicios } from './pages/Servicios'
 import { Portafolio } from './pages/Portafolio'
@@ -46,8 +48,23 @@ function ScrollProgressBar() {
 }
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1800)
+    return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    document.body.style.overflow = isLoading ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isLoading])
+
   return (
     <div className="flex min-h-screen flex-col">
+      <AnimatePresence>{isLoading && <LoadingScreen />}</AnimatePresence>
       <ScrollProgressBar />
       <Navbar />
       <AnimatedRoutes />
