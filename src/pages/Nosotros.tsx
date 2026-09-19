@@ -1,6 +1,8 @@
 import { Target, Eye, ShieldCheck, Users } from 'lucide-react'
 import { SectionReveal } from '../components/SectionReveal'
 import { CircuitBackground } from '../components/CircuitBackground'
+import { AmbientGlow } from '../components/AmbientGlow'
+import { TiltCard } from '../components/TiltCard'
 
 // TODO: contenido de ejemplo — reemplazar con la historia y valores reales de MySaC.
 const VALUES = [
@@ -24,6 +26,7 @@ const VALUES = [
 export function Nosotros() {
   return (
     <div className="relative mx-auto max-w-5xl px-4 py-16 sm:px-6">
+      <AmbientGlow tone="light" />
       <CircuitBackground tone="light" className="opacity-40" />
       <div className="relative z-10">
       <SectionReveal className="mb-14 text-center">
@@ -33,7 +36,7 @@ export function Nosotros() {
         </p>
       </SectionReveal>
 
-      <SectionReveal className="mb-16 rounded-2xl bg-neutral-50 p-8 sm:p-10">
+      <SectionReveal direction="scale" className="mb-16 rounded-2xl bg-neutral-50 p-8 sm:p-10">
         <h2 className="mb-3 text-2xl font-bold text-brand-black">Nuestra historia</h2>
         <p className="text-neutral-600">
           MySaC nació de la pasión por la tecnología y las ganas de ofrecer un servicio técnico
@@ -45,7 +48,7 @@ export function Nosotros() {
       </SectionReveal>
 
       <div className="mb-16 grid gap-8 sm:grid-cols-2">
-        <SectionReveal className="rounded-2xl border border-neutral-200 p-8">
+        <SectionReveal direction="left" className="rounded-2xl border border-neutral-200 p-8">
           <Target className="mb-4 text-brand-red" size={32} />
           <h3 className="mb-2 text-xl font-bold text-brand-black">Misión</h3>
           <p className="text-neutral-600">
@@ -53,7 +56,7 @@ export function Nosotros() {
             desde la reparación de un equipo hasta la infraestructura completa de red y seguridad.
           </p>
         </SectionReveal>
-        <SectionReveal delay={0.1} className="rounded-2xl border border-neutral-200 p-8">
+        <SectionReveal direction="right" delay={0.1} className="rounded-2xl border border-neutral-200 p-8">
           <Eye className="mb-4 text-brand-red" size={32} />
           <h3 className="mb-2 text-xl font-bold text-brand-black">Visión</h3>
           <p className="text-neutral-600">
@@ -67,11 +70,11 @@ export function Nosotros() {
         <h2 className="mb-8 text-center text-2xl font-bold text-brand-black">Nuestros valores</h2>
         <div className="grid gap-6 sm:grid-cols-3">
           {VALUES.map(({ icon: Icon, title, description }) => (
-            <div key={title} className="rounded-2xl bg-neutral-50 p-6 text-center">
+            <TiltCard key={title} className="rounded-2xl bg-neutral-50 p-6 text-center">
               <Icon className="mx-auto mb-3 text-brand-red" size={28} />
               <h3 className="mb-1 font-bold text-brand-black">{title}</h3>
               <p className="text-sm text-neutral-600">{description}</p>
-            </div>
+            </TiltCard>
           ))}
         </div>
       </SectionReveal>

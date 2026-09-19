@@ -4,7 +4,8 @@ import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion'
 import { Navbar } from './components/Navbar'
 import { Footer } from './components/Footer'
 import { FloatingWhatsAppButton } from './components/WhatsAppButton'
-import { LoadingScreen } from './components/LoadingScreen'
+import { LoadingScreen, LOADING_DURATION_MS } from './components/LoadingScreen'
+import { startLenis, stopLenis } from './lib/lenis'
 import { Home } from './pages/Home'
 import { Servicios } from './pages/Servicios'
 import { Portafolio } from './pages/Portafolio'
@@ -51,7 +52,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1800)
+    const timer = setTimeout(() => setIsLoading(false), LOADING_DURATION_MS)
     return () => clearTimeout(timer)
   }, [])
 
@@ -60,6 +61,12 @@ function App() {
     return () => {
       document.body.style.overflow = ''
     }
+  }, [isLoading])
+
+  useEffect(() => {
+    if (isLoading) return
+    startLenis()
+    return () => stopLenis()
   }, [isLoading])
 
   return (

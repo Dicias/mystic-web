@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { MapPin, Phone, Clock } from 'lucide-react'
 import { SectionReveal } from '../components/SectionReveal'
 import { CircuitBackground } from '../components/CircuitBackground'
+import { AmbientGlow } from '../components/AmbientGlow'
 import { SERVICES } from '../data/services'
 import { BUSINESS } from '../data/business'
 import { buildWhatsAppLink } from '../lib/whatsapp'
@@ -27,6 +28,7 @@ export function Contacto() {
 
   return (
     <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6">
+      <AmbientGlow tone="light" />
       <CircuitBackground tone="light" className="opacity-40" />
       <div className="relative z-10">
       <SectionReveal className="mb-14 text-center">
@@ -37,7 +39,7 @@ export function Contacto() {
       </SectionReveal>
 
       <div className="grid gap-12 md:grid-cols-2">
-        <SectionReveal>
+        <SectionReveal direction="left">
           <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-neutral-200 p-8">
             <div>
               <label htmlFor="name" className="mb-1 block text-sm font-semibold text-brand-black">
@@ -97,7 +99,7 @@ export function Contacto() {
           </form>
         </SectionReveal>
 
-        <SectionReveal delay={0.1} className="space-y-6">
+        <SectionReveal direction="right" delay={0.1} className="space-y-6">
           <div className="space-y-4 rounded-2xl bg-neutral-50 p-8">
             <div className="flex items-start gap-3">
               <Phone className="mt-0.5 shrink-0 text-brand-red" size={20} />

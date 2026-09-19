@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom'
 import { MapPin, Clock, Phone } from 'lucide-react'
 import logo from '../assets/logo.jpeg'
 import { BUSINESS } from '../data/business'
+import { AmbientGlow } from './AmbientGlow'
+import { SectionReveal } from './SectionReveal'
 
 // lucide-react dropped brand/social icons, so these two are small inline SVGs.
 function FacebookIcon() {
@@ -24,8 +26,9 @@ function InstagramIcon() {
 
 export function Footer() {
   return (
-    <footer className="bg-brand-black text-neutral-300">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-4">
+    <footer className="relative overflow-hidden bg-brand-black text-neutral-300">
+      <AmbientGlow tone="dark" />
+      <SectionReveal className="relative z-10 mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-4">
         <div>
           <img src={logo} alt="MySaC" className="h-14 w-auto bg-white p-1 object-contain" />
           <p className="mt-4 text-sm text-neutral-400">{BUSINESS.tagline}</p>
@@ -85,9 +88,9 @@ export function Footer() {
             </a>
           </div>
         </div>
-      </div>
+      </SectionReveal>
 
-      <div className="border-t border-neutral-800 px-4 py-4 text-center text-xs text-neutral-500 sm:px-6">
+      <div className="relative z-10 border-t border-neutral-800 px-4 py-4 text-center text-xs text-neutral-500 sm:px-6">
         © {new Date().getFullYear()} {BUSINESS.name}. Todos los derechos reservados.
       </div>
     </footer>

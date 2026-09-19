@@ -3,9 +3,12 @@ import { useLocation } from 'react-router-dom'
 import { CheckCircle2 } from 'lucide-react'
 import { SectionReveal } from '../components/SectionReveal'
 import { CircuitBackground } from '../components/CircuitBackground'
+import { AmbientGlow } from '../components/AmbientGlow'
+import { TiltCard } from '../components/TiltCard'
 import { WhatsAppCTA } from '../components/WhatsAppButton'
 import { SERVICES } from '../data/services'
 import { quoteMessage } from '../lib/whatsapp'
+import { getLenis } from '../lib/lenis'
 
 export function Servicios() {
   const location = useLocation()
@@ -13,11 +16,18 @@ export function Servicios() {
   useEffect(() => {
     if (!location.hash) return
     const el = document.getElementById(location.hash.slice(1))
-    el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    if (!el) return
+    const lenis = getLenis()
+    if (lenis) {
+      lenis.scrollTo(el, { offset: -20 })
+    } else {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
   }, [location.hash])
 
   return (
     <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6">
+      <AmbientGlow tone="light" />
       <CircuitBackground tone="light" className="opacity-40" />
       <div className="relative z-10">
       <SectionReveal className="mb-14 text-center">
@@ -32,16 +42,16 @@ export function Servicios() {
           const Icon = service.icon
           const reversed = i % 2 === 1
           return (
-            <SectionReveal key={service.id} delay={0.05}>
+            <SectionReveal key={service.id} direction={reversed ? 'right' : 'left'}>
               <div
                 id={service.id}
                 className={`flex scroll-mt-24 flex-col items-start gap-8 md:flex-row md:items-center ${
                   reversed ? 'md:flex-row-reverse' : ''
                 }`}
               >
-                <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-brand-red/10 text-brand-red">
+                <TiltCard className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-brand-red/10 text-brand-red">
                   <Icon size={44} />
-                </div>
+                </TiltCard>
                 <div className="flex-1">
                   <h2 className="text-2xl font-bold text-brand-black">{service.title}</h2>
                   <p className="mt-3 text-neutral-600">{service.description}</p>

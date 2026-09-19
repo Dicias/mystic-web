@@ -7,6 +7,8 @@ interface FluidParticlesBackgroundProps {
   noiseIntensity?: number
   particleSize?: { min: number; max: number }
   className?: string
+  /** Force the dark particle/background scheme instead of reading the `dark` class off <html>. */
+  dark?: boolean
 }
 
 // Helper function for Perlin Noise
@@ -130,6 +132,7 @@ export const FluidParticlesBackground = ({
   noiseIntensity = 0.003,
   particleSize = { min: 0.5, max: 2 },
   className,
+  dark,
 }: FluidParticlesBackgroundProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const noise = createNoise()
@@ -163,7 +166,7 @@ export const FluidParticlesBackground = ({
     let frameId: number
 
     const animate = () => {
-      const isDark = document.documentElement.classList.contains('dark')
+      const isDark = dark ?? document.documentElement.classList.contains('dark')
       const scheme = isDark ? COLOR_SCHEME.dark : COLOR_SCHEME.light
 
       ctx.fillStyle = scheme.background
@@ -221,7 +224,7 @@ export const FluidParticlesBackground = ({
       window.removeEventListener('resize', handleResize)
       cancelAnimationFrame(frameId)
     }
-  }, [particleCount, noiseIntensity, particleSize, noise])
+  }, [particleCount, noiseIntensity, particleSize, noise, dark])
 
   return (
     <div

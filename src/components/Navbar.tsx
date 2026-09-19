@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import logo from '../assets/logo.jpeg'
 import { WhatsAppCTA } from './WhatsAppButton'
@@ -17,6 +17,10 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
 
+  const { scrollY } = useScroll()
+  const paddingY = useTransform(scrollY, [0, 80], [10, 4])
+  const logoHeight = useTransform(scrollY, [0, 80], [56, 42])
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12)
     onScroll()
@@ -25,14 +29,22 @@ export function Navbar() {
   }, [])
 
   return (
-    <header
-      className={`sticky top-0 z-40 w-full bg-white transition-shadow ${
-        scrolled ? 'shadow-md' : 'shadow-none'
+    <motion.header
+      className={`sticky top-0 z-40 w-full transition-all ${
+        scrolled ? 'bg-white/85 shadow-md backdrop-blur-md' : 'bg-white shadow-none'
       }`}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-2 sm:px-6">
+      <motion.div
+        style={{ paddingTop: paddingY, paddingBottom: paddingY }}
+        className="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6"
+      >
         <NavLink to="/" className="flex items-center" onClick={() => setMenuOpen(false)}>
-          <img src={logo} alt="MySaC" className="h-12 w-auto object-contain sm:h-14" />
+          <motion.img
+            src={logo}
+            alt="MySaC"
+            style={{ height: logoHeight }}
+            className="w-auto object-contain"
+          />
         </NavLink>
 
         <nav className="hidden items-center gap-8 md:flex">
@@ -42,12 +54,23 @@ export function Navbar() {
               to={link.to}
               end={link.to === '/'}
               className={({ isActive }) =>
-                `text-sm font-semibold transition-colors ${
+                `relative text-sm font-semibold transition-colors ${
                   isActive ? 'text-brand-red' : 'text-brand-black hover:text-brand-red'
                 }`
               }
             >
-              {link.label}
+              {({ isActive }) => (
+                <span className="relative inline-block py-1">
+                  {link.label}
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-underline"
+                      className="absolute -bottom-0.5 left-0 h-0.5 w-full rounded-full bg-brand-red"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                </span>
+              )}
             </NavLink>
           ))}
           <WhatsAppCTA message="Hola MySaC, me gustaría más información." className="px-4 py-2 text-sm">
@@ -63,7 +86,7 @@ export function Navbar() {
         >
           {menuOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
-      </div>
+      </motion.div>
 
       <AnimatePresence>
         {menuOpen && (
@@ -74,20 +97,26 @@ export function Navbar() {
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.25 }}
           >
-            {NAV_LINKS.map((link) => (
-              <NavLink
+            {NAV_LINKS.map((link, i) => (
+              <motion.div
                 key={link.to}
-                to={link.to}
-                end={link.to === '/'}
-                onClick={() => setMenuOpen(false)}
-                className={({ isActive }) =>
-                  `rounded-lg px-3 py-3 text-sm font-semibold ${
-                    isActive ? 'bg-brand-red/10 text-brand-red' : 'text-brand-black'
-                  }`
-                }
+                initial={{ opacity: 0, x: -16 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.25, delay: i * 0.04 }}
               >
-                {link.label}
-              </NavLink>
+                <NavLink
+                  to={link.to}
+                  end={link.to === '/'}
+                  onClick={() => setMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `block rounded-lg px-3 py-3 text-sm font-semibold ${
+                      isActive ? 'bg-brand-red/10 text-brand-red' : 'text-brand-black'
+                    }`
+                  }
+                >
+                  {link.label}
+                </NavLink>
+              </motion.div>
             ))}
             <WhatsAppCTA
               message="Hola MySaC, me gustaría más información."
@@ -98,6 +127,6 @@ export function Navbar() {
           </motion.nav>
         )}
       </AnimatePresence>
-    </header>
+    </motion.header>
   )
 }

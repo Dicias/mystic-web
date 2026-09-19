@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { SectionReveal } from '../components/SectionReveal'
 import { CircuitBackground } from '../components/CircuitBackground'
+import { AmbientGlow } from '../components/AmbientGlow'
+import { TiltCard } from '../components/TiltCard'
 import {
   PORTFOLIO_CATEGORY_LABELS,
   PORTFOLIO_ITEMS,
@@ -20,6 +22,7 @@ export function Portafolio() {
 
   return (
     <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6">
+      <AmbientGlow tone="light" />
       <CircuitBackground tone="light" className="opacity-40" />
       <div className="relative z-10">
       <SectionReveal className="mb-10 text-center">
@@ -31,10 +34,12 @@ export function Portafolio() {
 
       <div className="mb-10 flex flex-wrap justify-center gap-3">
         {FILTERS.map((f) => (
-          <button
+          <motion.button
             key={f}
             type="button"
             onClick={() => setFilter(f)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             className={`rounded-full px-5 py-2 text-sm font-semibold transition-colors ${
               filter === f
                 ? 'bg-brand-red text-white'
@@ -42,29 +47,38 @@ export function Portafolio() {
             }`}
           >
             {f === 'todos' ? 'Todos' : PORTFOLIO_CATEGORY_LABELS[f]}
-          </button>
+          </motion.button>
         ))}
       </div>
 
       <motion.div layout className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((item) => (
+        {items.map((item, i) => (
           <motion.div
             layout
             key={item.id}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.3 }}
-            className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm"
+            transition={{ duration: 0.3, delay: i * 0.03 }}
           >
-            <img src={item.image} alt={item.title} className="h-48 w-full object-cover" />
-            <div className="p-5">
-              <span className="text-xs font-semibold uppercase tracking-wide text-brand-red">
-                {PORTFOLIO_CATEGORY_LABELS[item.category]}
-              </span>
-              <h3 className="mt-1 font-bold text-brand-black">{item.title}</h3>
-              <p className="mt-2 text-sm text-neutral-600">{item.description}</p>
-            </div>
+            <TiltCard className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+              <div className="overflow-hidden">
+                <motion.img
+                  src={item.image}
+                  alt={item.title}
+                  whileHover={{ scale: 1.08 }}
+                  transition={{ duration: 0.4 }}
+                  className="h-48 w-full object-cover"
+                />
+              </div>
+              <div className="p-5">
+                <span className="text-xs font-semibold uppercase tracking-wide text-brand-red">
+                  {PORTFOLIO_CATEGORY_LABELS[item.category]}
+                </span>
+                <h3 className="mt-1 font-bold text-brand-black">{item.title}</h3>
+                <p className="mt-2 text-sm text-neutral-600">{item.description}</p>
+              </div>
+            </TiltCard>
           </motion.div>
         ))}
       </motion.div>
