@@ -1,11 +1,10 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { CheckCircle2 } from 'lucide-react'
+import { Check } from 'lucide-react'
 import { SectionReveal } from '../components/SectionReveal'
-import { CircuitBackground } from '../components/CircuitBackground'
-import { AmbientGlow } from '../components/AmbientGlow'
-import { TiltCard } from '../components/TiltCard'
 import { WhatsAppCTA } from '../components/WhatsAppButton'
+import { PageHeader } from '../components/PageHeader'
+import { FinalCTA } from '../components/FinalCTA'
 import { SERVICES } from '../data/services'
 import { quoteMessage } from '../lib/whatsapp'
 import { getLenis } from '../lib/lenis'
@@ -19,60 +18,90 @@ export function Servicios() {
     if (!el) return
     const lenis = getLenis()
     if (lenis) {
-      lenis.scrollTo(el, { offset: -20 })
+      lenis.scrollTo(el, { offset: -100 })
     } else {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }, [location.hash])
 
   return (
-    <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6">
-      <AmbientGlow tone="light" />
-      <CircuitBackground tone="light" className="opacity-40" />
-      <div className="relative z-10">
-      <SectionReveal className="mb-14 text-center">
-        <h1 className="text-4xl font-extrabold text-brand-black">Nuestros Servicios</h1>
-        <p className="mx-auto mt-3 max-w-2xl text-neutral-600">
-          Todo lo que tu equipo, tu red o tu negocio necesitan, con un mismo proveedor de confianza.
-        </p>
-      </SectionReveal>
+    <div>
+      <PageHeader
+        index="01"
+        eyebrow="Servicios"
+        title="Soluciones que"
+        accent="resuelven"
+        description="Todo lo que tu equipo, tu red o tu negocio necesitan, con un mismo proveedor de confianza."
+      >
+        <nav className="mt-10 flex flex-wrap gap-2" aria-label="Servicios">
+          {SERVICES.map((service, i) => (
+            <a
+              key={service.id}
+              href={`#${service.id}`}
+              onClick={(e) => {
+                e.preventDefault()
+                const el = document.getElementById(service.id)
+                if (!el) return
+                const lenis = getLenis()
+                if (lenis) lenis.scrollTo(el, { offset: -100 })
+                else el.scrollIntoView({ behavior: 'smooth' })
+              }}
+              className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-neutral-300 transition-colors hover:border-white/25 hover:text-white"
+            >
+              <span className="mr-2 font-mono text-[11px] text-brand-red">{String(i + 1).padStart(2, '0')}</span>
+              {service.title.split(' ').slice(0, 3).join(' ')}
+            </a>
+          ))}
+        </nav>
+      </PageHeader>
 
-      <div className="space-y-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {SERVICES.map((service, i) => {
           const Icon = service.icon
-          const reversed = i % 2 === 1
           return (
-            <SectionReveal key={service.id} direction={reversed ? 'right' : 'left'}>
-              <div
-                id={service.id}
-                className={`flex scroll-mt-24 flex-col items-start gap-8 md:flex-row md:items-center ${
-                  reversed ? 'md:flex-row-reverse' : ''
-                }`}
-              >
-                <TiltCard className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-brand-red/10 text-brand-red">
-                  <Icon size={44} />
-                </TiltCard>
-                <div className="flex-1">
-                  <h2 className="text-2xl font-bold text-brand-black">{service.title}</h2>
-                  <p className="mt-3 text-neutral-600">{service.description}</p>
-                  <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-                    {service.bullets.map((bullet) => (
-                      <li key={bullet} className="flex items-start gap-2 text-sm text-neutral-700">
-                        <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-brand-red" />
-                        {bullet}
-                      </li>
-                    ))}
-                  </ul>
-                  <WhatsAppCTA message={quoteMessage(service.title)} className="mt-6">
-                    Cotizar este servicio
-                  </WhatsAppCTA>
+            <section
+              key={service.id}
+              id={service.id}
+              className="grid scroll-mt-28 gap-10 border-b border-white/10 py-20 last:border-b-0 sm:py-28 lg:grid-cols-12"
+            >
+              <SectionReveal className="lg:col-span-5">
+                <div className="lg:sticky lg:top-32">
+                  <div className="flex items-center gap-4">
+                    <span className="font-serif text-6xl italic leading-none text-brand-red">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-white">
+                      <Icon size={22} />
+                    </span>
+                  </div>
+                  <h2 className="text-balance mt-8 text-3xl font-semibold leading-[1.05] tracking-[-0.035em] text-white sm:text-5xl">
+                    {service.title}
+                  </h2>
                 </div>
-              </div>
-            </SectionReveal>
+              </SectionReveal>
+
+              <SectionReveal delay={0.1} className="lg:col-span-6 lg:col-start-7">
+                <p className="text-xl leading-relaxed text-neutral-300">{service.description}</p>
+                <ul className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-2">
+                  {service.bullets.map((bullet) => (
+                    <li key={bullet} className="flex items-start gap-3 bg-brand-black p-5 text-[15px] text-neutral-200">
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-red/15 text-brand-red">
+                        <Check size={12} strokeWidth={3} />
+                      </span>
+                      {bullet}
+                    </li>
+                  ))}
+                </ul>
+                <WhatsAppCTA message={quoteMessage(service.title)} className="mt-10">
+                  Cotizar este servicio
+                </WhatsAppCTA>
+              </SectionReveal>
+            </section>
           )
         })}
       </div>
-      </div>
+
+      <FinalCTA />
     </div>
   )
 }

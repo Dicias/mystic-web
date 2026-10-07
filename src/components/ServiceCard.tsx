@@ -43,7 +43,7 @@ export function ServiceCard({ service, onSelect }: ServiceCardProps) {
       onPointerMove={handleMove}
       onPointerEnter={() => y.set(-6)}
       onPointerLeave={handleLeave}
-      className="flex h-full flex-col items-start gap-4 rounded-2xl border border-neutral-200 bg-white p-6 text-left shadow-sm transition-shadow hover:shadow-xl"
+      className="flex h-full flex-col items-start gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 text-left backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]"
       initial="rest"
       whileHover="hover"
       animate="rest"
@@ -56,8 +56,8 @@ export function ServiceCard({ service, onSelect }: ServiceCardProps) {
       >
         <Icon size={26} />
       </motion.div>
-      <h3 className="text-lg font-bold text-brand-black">{service.title}</h3>
-      <p className="text-sm text-neutral-600">{service.shortDescription}</p>
+      <h3 className="text-lg font-bold text-white">{service.title}</h3>
+      <p className="text-sm text-neutral-400">{service.shortDescription}</p>
     </motion.button>
   )
 }

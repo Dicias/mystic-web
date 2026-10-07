@@ -1,9 +1,8 @@
 import { Link } from 'react-router-dom'
-import { MapPin, Clock, Phone } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 import logo from '../assets/logo.jpeg'
 import { BUSINESS } from '../data/business'
-import { AmbientGlow } from './AmbientGlow'
-import { SectionReveal } from './SectionReveal'
+import { buildWhatsAppLink } from '../lib/whatsapp'
 
 // lucide-react dropped brand/social icons, so these two are small inline SVGs.
 function FacebookIcon() {
@@ -24,74 +23,105 @@ function InstagramIcon() {
   )
 }
 
+const NAV = [
+  { to: '/', label: 'Inicio' },
+  { to: '/servicios', label: 'Servicios' },
+  { to: '/portafolio', label: 'Portafolio' },
+  { to: '/nosotros', label: 'Nosotros' },
+  { to: '/contacto', label: 'Contacto' },
+]
+
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-brand-black text-neutral-300">
-      <AmbientGlow tone="dark" />
-      <SectionReveal className="relative z-10 mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-4">
-        <div>
-          <img src={logo} alt="MySaC" className="h-14 w-auto bg-white p-1 object-contain" />
-          <p className="mt-4 text-sm text-neutral-400">{BUSINESS.tagline}</p>
-        </div>
+    <footer className="relative overflow-hidden border-t border-white/10 bg-brand-black text-neutral-400">
+      <div className="pointer-events-none absolute -bottom-40 left-1/2 h-80 w-[60rem] -translate-x-1/2 rounded-full bg-brand-red/10 blur-[120px]" />
 
-        <div>
-          <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-white">
-            Navegación
-          </h4>
-          <ul className="space-y-2 text-sm">
-            <li><Link to="/" className="hover:text-brand-red">Inicio</Link></li>
-            <li><Link to="/servicios" className="hover:text-brand-red">Servicios</Link></li>
-            <li><Link to="/portafolio" className="hover:text-brand-red">Portafolio</Link></li>
-            <li><Link to="/nosotros" className="hover:text-brand-red">Nosotros</Link></li>
-            <li><Link to="/contacto" className="hover:text-brand-red">Contacto</Link></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-white">
-            Contacto
-          </h4>
-          <ul className="space-y-3 text-sm">
-            <li className="flex items-start gap-2">
-              <Phone size={16} className="mt-0.5 shrink-0 text-brand-red" />
-              <span>{BUSINESS.phoneDisplay}</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <MapPin size={16} className="mt-0.5 shrink-0 text-brand-red" />
-              <span>{BUSINESS.address}</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <Clock size={16} className="mt-0.5 shrink-0 text-brand-red" />
-              <span>{BUSINESS.hours}</span>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-white">
-            Síguenos
-          </h4>
-          <div className="flex gap-3">
+      <div className="relative mx-auto max-w-7xl px-4 pt-20 sm:px-6 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-12">
+          <div className="lg:col-span-5">
+            <img src={logo} alt="MySaC" className="h-11 w-auto rounded-md bg-white object-contain p-1" />
+            <p className="mt-6 max-w-sm text-balance text-2xl font-medium leading-snug tracking-tight text-white">
+              Tu tecnología, en manos{' '}
+              <span className="font-serif font-normal italic text-brand-red">expertas</span>.
+            </p>
             <a
-              href={BUSINESS.socials.facebook}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-800 transition-colors hover:bg-brand-red"
-              aria-label="Facebook"
+              href={buildWhatsAppLink('Hola MySaC, me gustaría solicitar una cotización.')}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group mt-8 inline-flex items-center gap-2 border-b border-white/30 pb-1 text-sm font-medium text-white transition-colors hover:border-brand-red hover:text-brand-red"
             >
-              <FacebookIcon />
-            </a>
-            <a
-              href={BUSINESS.socials.instagram}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-800 transition-colors hover:bg-brand-red"
-              aria-label="Instagram"
-            >
-              <InstagramIcon />
+              Escríbenos por WhatsApp
+              <ArrowUpRight size={16} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </a>
           </div>
-        </div>
-      </SectionReveal>
 
-      <div className="relative z-10 border-t border-neutral-800 px-4 py-4 text-center text-xs text-neutral-500 sm:px-6">
-        © {new Date().getFullYear()} {BUSINESS.name}. Todos los derechos reservados.
+          <div className="grid gap-10 sm:grid-cols-3 lg:col-span-7">
+            <div>
+              <h4 className="mb-5 font-mono text-[11px] uppercase tracking-[0.22em] text-neutral-500">Navegación</h4>
+              <ul className="space-y-3 text-sm">
+                {NAV.map((item) => (
+                  <li key={item.to}>
+                    <Link to={item.to} className="transition-colors hover:text-white">
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="mb-5 font-mono text-[11px] uppercase tracking-[0.22em] text-neutral-500">Contacto</h4>
+              <ul className="space-y-3 text-sm">
+                <li>
+                  <a href={`tel:+52${BUSINESS.phoneDisplay.replace(/\s/g, '')}`} className="transition-colors hover:text-white">
+                    {BUSINESS.phoneDisplay}
+                  </a>
+                </li>
+                <li>
+                  <a href={BUSINESS.mapsUrl} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-white">
+                    {BUSINESS.address}
+                  </a>
+                </li>
+                <li>{BUSINESS.hours}</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="mb-5 font-mono text-[11px] uppercase tracking-[0.22em] text-neutral-500">Síguenos</h4>
+              <div className="flex gap-2">
+                <a
+                  href={BUSINESS.socials.facebook}
+                  className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 text-neutral-300 transition-colors hover:border-brand-red hover:bg-brand-red hover:text-white"
+                  aria-label="Facebook"
+                >
+                  <FacebookIcon />
+                </a>
+                <a
+                  href={BUSINESS.socials.instagram}
+                  className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 text-neutral-300 transition-colors hover:border-brand-red hover:bg-brand-red hover:text-white"
+                  aria-label="Instagram"
+                >
+                  <InstagramIcon />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Oversized wordmark, cropped by the page edge. */}
+        <p
+          aria-hidden="true"
+          className="pointer-events-none mt-20 select-none bg-gradient-to-b from-white/[0.14] to-transparent bg-clip-text text-center text-[24vw] font-semibold leading-[0.75] tracking-[-0.06em] text-transparent lg:text-[20rem]"
+        >
+          MySaC
+        </p>
+      </div>
+
+      <div className="relative border-t border-white/10">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-6 font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-600 sm:flex-row sm:justify-between sm:px-6 lg:px-8">
+          <span>© {new Date().getFullYear()} {BUSINESS.name}. Todos los derechos reservados.</span>
+          <span>Santiago de Querétaro · MX</span>
+        </div>
       </div>
     </footer>
   )

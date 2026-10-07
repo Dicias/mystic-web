@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { motion, useInView, animate } from 'framer-motion'
+import { useInView, animate } from 'framer-motion'
 
 interface StatCounterProps {
   value: number
@@ -16,26 +16,19 @@ export function StatCounter({ value, suffix = '', label }: StatCounterProps) {
     if (!isInView) return
     const controls = animate(0, value, {
       duration: 1.6,
-      ease: 'easeOut',
+      ease: [0.22, 1, 0.36, 1],
       onUpdate: (latest) => setDisplayValue(Math.round(latest)),
     })
     return () => controls.stop()
   }, [isInView, value])
 
   return (
-    <motion.div
-      ref={ref}
-      className="text-center"
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
-    >
-      <p className="text-4xl font-extrabold text-brand-red sm:text-5xl">
-        {displayValue}
-        {suffix}
+    <div ref={ref}>
+      <p className="text-4xl font-semibold tabular-nums tracking-[-0.04em] text-white sm:text-5xl">
+        {displayValue.toLocaleString('es-MX')}
+        <span className="text-brand-red">{suffix}</span>
       </p>
-      <p className="mt-2 text-sm font-medium text-neutral-300 sm:text-base">{label}</p>
-    </motion.div>
+      <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.2em] text-neutral-500">{label}</p>
+    </div>
   )
 }
